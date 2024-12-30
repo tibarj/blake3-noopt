@@ -4,10 +4,6 @@ Blake3 php 8.3 implementation, for instructional purposes only
 
 Reference: https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf
 
-```bash
-composer require tibarj/blake3noopt
-```
-
 ## Usage
 
 ```php
