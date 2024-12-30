@@ -63,22 +63,22 @@ abstract class AbstractBlake3
             p('t0: ' . $v[12]);
             p('t1: ' . $v[13]);
             p('b: ' . $v[14]);
-            static::printFlags($v[15]);
-            static::printMatrix('m', str_split($block, 4), 'bin2hex');
-            static::printMatrix('v', $v, 'dechex');
+            self::printFlags($v[15]);
+            self::printMatrix('m', str_split($block, 4), 'bin2hex');
+            self::printMatrix('v', $v, 'dechex');
         }
 
-        $m = static::unpack($block, static::OUTPUT_SIZE_WORD); // 16 uint32 (little endian byte order)
-        $h = array_slice($v, 0, static::CHAIN_SIZE_WORD);
+        $m = static::unpack($block, self::OUTPUT_SIZE_WORD); // 16 uint32 (little endian byte order)
+        $h = array_slice($v, 0, self::CHAIN_SIZE_WORD);
 
         // the 7 rounds
-        static::round($m, $v);
-        static::round($m = static::permute($m), $v);
-        static::round($m = static::permute($m), $v);
-        static::round($m = static::permute($m), $v);
-        static::round($m = static::permute($m), $v);
-        static::round($m = static::permute($m), $v);
-        static::round($m = static::permute($m), $v);
+        self::round($m, $v);
+        self::round($m = self::permute($m), $v);
+        self::round($m = self::permute($m), $v);
+        self::round($m = self::permute($m), $v);
+        self::round($m = self::permute($m), $v);
+        self::round($m = self::permute($m), $v);
+        self::round($m = self::permute($m), $v);
 
         return [
             $v[ 0] ^ $v[ 8],    $v[ 1] ^ $v[ 9],    $v[ 2] ^ $v[10],    $v[ 3] ^ $v[11],
@@ -95,16 +95,16 @@ abstract class AbstractBlake3
      */
     private static function round(array $m, array &$v): void
     {
-        static::quarterRound($m[ 0], $m[ 1], $v[0], $v[4], $v[ 8], $v[12]);
-        static::quarterRound($m[ 2], $m[ 3], $v[1], $v[5], $v[ 9], $v[13]);
-        static::quarterRound($m[ 4], $m[ 5], $v[2], $v[6], $v[10], $v[14]);
-        static::quarterRound($m[ 6], $m[ 7], $v[3], $v[7], $v[11], $v[15]);
+        self::quarterRound($m[ 0], $m[ 1], $v[0], $v[4], $v[ 8], $v[12]);
+        self::quarterRound($m[ 2], $m[ 3], $v[1], $v[5], $v[ 9], $v[13]);
+        self::quarterRound($m[ 4], $m[ 5], $v[2], $v[6], $v[10], $v[14]);
+        self::quarterRound($m[ 6], $m[ 7], $v[3], $v[7], $v[11], $v[15]);
 
         //                                   rot0   rot1   rot2    rot3
-        static::quarterRound($m[ 8], $m[ 9], $v[0], $v[5], $v[10], $v[15]);
-        static::quarterRound($m[10], $m[11], $v[1], $v[6], $v[11], $v[12]);
-        static::quarterRound($m[12], $m[13], $v[2], $v[7], $v[ 8], $v[13]);
-        static::quarterRound($m[14], $m[15], $v[3], $v[4], $v[ 9], $v[14]);
+        self::quarterRound($m[ 8], $m[ 9], $v[0], $v[5], $v[10], $v[15]);
+        self::quarterRound($m[10], $m[11], $v[1], $v[6], $v[11], $v[12]);
+        self::quarterRound($m[12], $m[13], $v[2], $v[7], $v[ 8], $v[13]);
+        self::quarterRound($m[14], $m[15], $v[3], $v[4], $v[ 9], $v[14]);
     }
 
     /**
@@ -164,13 +164,13 @@ abstract class AbstractBlake3
     private static function printFlags(int $flag): void
     {
         $out = [];
-        if ($flag & static::FLAG_CHUNK_START) $out[] = 'CHUNK_START';
-        if ($flag & static::FLAG_CHUNK_END) $out[] = 'CHUNK_END';
-        if ($flag & static::FLAG_PARENT) $out[] = 'PARENT';
-        if ($flag & static::FLAG_ROOT) $out[] = 'ROOT';
-        if ($flag & static::FLAG_KEYED_HASH) $out[] = 'KEYED_HASH';
-        if ($flag & static::FLAG_DERIVE_KEY_CONTEXT) $out[] = 'DERIVE_KEY_CONTEXT';
-        if ($flag & static::FLAG_DERIVE_KEY_MATERIAL) $out[] = 'DERIVE_KEY_MATERIAL';
+        if ($flag & self::FLAG_CHUNK_START)         $out[] = 'CHUNK_START';
+        if ($flag & self::FLAG_CHUNK_END)           $out[] = 'CHUNK_END';
+        if ($flag & self::FLAG_PARENT)              $out[] = 'PARENT';
+        if ($flag & self::FLAG_ROOT)                $out[] = 'ROOT';
+        if ($flag & self::FLAG_KEYED_HASH)          $out[] = 'KEYED_HASH';
+        if ($flag & self::FLAG_DERIVE_KEY_CONTEXT)  $out[] = 'DERIVE_KEY_CONTEXT';
+        if ($flag & self::FLAG_DERIVE_KEY_MATERIAL) $out[] = 'DERIVE_KEY_MATERIAL';
 
         p('flags: ' . implode(' ', $out) . PHP_EOL);
     }

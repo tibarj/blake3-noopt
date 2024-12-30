@@ -26,18 +26,18 @@ class Blake3Hash extends AbstractBlake3
     public function __construct(?string $key = null)
     {
         if (null !== $key) {
-            if (strlen($key) != static::KEY_SIZE_BYTE) {
+            if (strlen($key) != self::KEY_SIZE_BYTE) {
                 throw new InvalidArgumentException(
-                    'Key is not ' . static::KEY_SIZE_BYTE . ' bytes long'
+                    'Key is not ' . self::KEY_SIZE_BYTE . ' bytes long'
                 );
             }
-            $this->flag = static::FLAG_KEYED_HASH;
-            $this->k = static::unpack($key, static::KEY_SIZE_WORD);
+            $this->flag = self::FLAG_KEYED_HASH;
+            $this->k = self::unpack($key, self::KEY_SIZE_WORD);
         } else {
             $this->flag = 0;
             $this->k = [
-                static::IV0, static::IV1, static::IV2, static::IV3,
-                static::IV4, static::IV5, static::IV6, static::IV7,
+                self::IV0, self::IV1, self::IV2, self::IV3,
+                self::IV4, self::IV5, self::IV6, self::IV7,
             ];
         }
     }
@@ -89,7 +89,7 @@ class Blake3Hash extends AbstractBlake3
         if ($this->cargo) {
             $this->shipCargo();
         }
-        $cargo = static::getNodeCargo($this->root);
+        $cargo = self::getNodeCargo($this->root);
 
         $stream = $this->hash;
         $squeezed = strlen($stream); // bytes
@@ -97,7 +97,7 @@ class Blake3Hash extends AbstractBlake3
             $output = $this->processTree(force: true);
 
             // package the root output
-            $stream .= static::pack($output, static::OUTPUT_SIZE_WORD);
+            $stream .= static::pack($output, self::OUTPUT_SIZE_WORD);
             $cargo->incrementCounter();
             $squeezed += self::BLOCK_SIZE_BYTE;
             $this->squeezed += self::BLOCK_SIZE_BYTE;
@@ -117,16 +117,16 @@ class Blake3Hash extends AbstractBlake3
     {
         p(__METHOD__ . ' ' . $node);
 
-        $cargo = static::getNodeCargo($node);
+        $cargo = self::getNodeCargo($node);
         $chunkSize = strlen($cargo->getInput());
         $h = $this->k;
-        $k = [static::IV0, static::IV1, static::IV2, static::IV3];
+        $k = [self::IV0, self::IV1, self::IV2, self::IV3];
         $blockOffset = 0;
         $it = 0;
         while (true) {
-            $nextBlockOffset = $blockOffset + static::BLOCK_SIZE_BYTE;
+            $nextBlockOffset = $blockOffset + self::BLOCK_SIZE_BYTE;
             $isLastBlock = $nextBlockOffset >= $chunkSize;
-            $block = substr($cargo->getInput(), $blockOffset, static::BLOCK_SIZE_BYTE);
+            $block = substr($cargo->getInput(), $blockOffset, self::BLOCK_SIZE_BYTE);
             $v = [
                 ...$h, //v0..v7
                 ...$k, // v8...v11
@@ -136,22 +136,22 @@ class Blake3Hash extends AbstractBlake3
                 $this->flag, // v15
             ];
             if ($node->isParent()) {
-                $v[15] |= static::FLAG_PARENT;
+                $v[15] |= self::FLAG_PARENT;
             } else {
                 if (!$blockOffset) {
-                    $v[15] |= static::FLAG_CHUNK_START;
+                    $v[15] |= self::FLAG_CHUNK_START;
                 }
                 if ($isLastBlock) {
-                    $v[15] |= static::FLAG_CHUNK_END;
+                    $v[15] |= self::FLAG_CHUNK_END;
                 }
             }
             if ($isLastBlock) {
                 if ($node->isRoot()) {
-                    $v[15] |= static::FLAG_ROOT;
+                    $v[15] |= self::FLAG_ROOT;
                 }
-                if ($b < static::BLOCK_SIZE_BYTE) {
-                    p('pad message with ' . (static::BLOCK_SIZE_BYTE - $b) . ' bytes');
-                    $block = str_pad($block, static::BLOCK_SIZE_BYTE, chr(0));
+                if ($b < self::BLOCK_SIZE_BYTE) {
+                    p('pad message with ' . (self::BLOCK_SIZE_BYTE - $b) . ' bytes');
+                    $block = str_pad($block, self::BLOCK_SIZE_BYTE, chr(0));
                 }
             }
             p("Compress Node $node, Block $it" . PHP_EOL);
@@ -161,7 +161,7 @@ class Blake3Hash extends AbstractBlake3
                 p("fill cargo output of node $node");
                 return $vv;
             }
-            $h = array_slice($vv, 0, static::CHAIN_SIZE_WORD);
+            $h = array_slice($vv, 0, self::CHAIN_SIZE_WORD);
             $blockOffset = $nextBlockOffset;
         }
         throw new LogicException('Process failed');
@@ -195,10 +195,10 @@ class Blake3Hash extends AbstractBlake3
                 $output = $this->processNode($node);
                 if ($node->parent) {
                     p("fill cargo input of node {$node->parent} from output of node $node");
-                    static::getNodeCargo($node->parent)->ingest(
+                    self::getNodeCargo($node->parent)->ingest(
                         static::pack(
-                            array_slice($output, 0, static::CHAIN_SIZE_WORD),
-                            static::CHAIN_SIZE_WORD
+                            array_slice($output, 0, self::CHAIN_SIZE_WORD),
+                            self::CHAIN_SIZE_WORD
                         )
                     );
                     $trash[] = $node;
@@ -216,7 +216,7 @@ class Blake3Hash extends AbstractBlake3
 
     private function createChunkCargo(): NodeCargo
     {
-        return new NodeCargo(static::CHUNK_SIZE_BYTE, $this->chunkIndex++);
+        return new NodeCargo(self::CHUNK_SIZE_BYTE, $this->chunkIndex++);
     }
 
     /**
@@ -224,6 +224,6 @@ class Blake3Hash extends AbstractBlake3
      */
     private static function getNodeCargo(BinaryNode $node): NodeCargo
     {
-        return $node->cargo ??= new NodeCargo(static::BLOCK_SIZE_BYTE);
+        return $node->cargo ??= new NodeCargo(self::BLOCK_SIZE_BYTE);
     }
 }
