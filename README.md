@@ -4,7 +4,17 @@ Blake3 php 8.3 implementation, for instructional purposes only
 
 Reference: https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf
 
-## Usage
+## Basic Usage
+
+```php
+use Tibarj\Blake3Noopt\Blake3Hash;
+
+$hash = (new Blake3Hash())
+    ->absorb($input)
+    ->squeeze();
+```
+
+## Advanced Usage
 
 ### Hash / Keyed Hash Modes
 
