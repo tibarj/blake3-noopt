@@ -9,6 +9,10 @@ namespace Tibarj\Blake3Noopt\tests;
 use Generator;
 use PHPUnit\Framework\TestCase;
 
+use const Tibarj\Blake3Noopt\INT32_BIT_SIZE;
+
+use function Tibarj\Blake3Noopt\rrotate;
+
 final class FunctionsTest extends TestCase
 {
     function data(): Generator

@@ -17,28 +17,43 @@ class Blake3Hash extends AbstractBlake3
     private int $absorbed = 0; // bytes
     private int $squeezed = 0; // bytes
     private string $hash = '';
-    /** @var int[] */ private readonly array $k; // 16 uint32 words
-    private readonly int $flag; // default flag
+    /** @var int[] */ private array $k; // 8 uint32 words
+    private int $flag; // default flag
 
     /**
-     * @throws InvalidArgumentException when $key is not 32 bytes long
+     * @throws InvalidArgumentException when
+     *            - $strategy and $key are incompatible
+     *            - non-null $key is not 32 bytes long
      */
-    public function __construct(?string $key = null)
-    {
+    public function __construct(
+        ?string $key = null,
+        Strategy $strategy = Strategy::HASH,
+    ) {
         if (null !== $key) {
-            if (strlen($key) != self::KEY_SIZE_BYTE) {
-                throw new InvalidArgumentException(
-                    'Key is not ' . self::KEY_SIZE_BYTE . ' bytes long'
-                );
+            if (
+                $strategy == Strategy::HASH ||
+                $strategy == Strategy::DERIVE_KEY_CONTEXT
+            ) {
+                throw new InvalidArgumentException('$key and $strategy are incompatible');
             }
-            $this->flag = self::FLAG_KEYED_HASH;
             $this->k = self::unpack($key, self::KEY_SIZE_WORD);
+            $this->flag = Strategy::KEYED_HASH == $strategy
+                ? self::FLAG_KEYED_HASH
+                : self::FLAG_DERIVE_KEY_MATERIAL;
         } else {
-            $this->flag = 0;
+            if (
+                $strategy == Strategy::KEYED_HASH ||
+                $strategy == Strategy::DERIVE_KEY_MATERIAL
+            ) {
+                throw new InvalidArgumentException('$key and $strategy are incompatible');
+            }
             $this->k = [
                 self::IV0, self::IV1, self::IV2, self::IV3,
                 self::IV4, self::IV5, self::IV6, self::IV7,
             ];
+            $this->flag = Strategy::DERIVE_KEY_CONTEXT == $strategy
+                ? self::FLAG_DERIVE_KEY_CONTEXT
+                : 0;
         }
     }
 

@@ -24,13 +24,13 @@ abstract class AbstractBlake3
     protected final const FLAG_DERIVE_KEY_MATERIAL = 64; // 2^6
 
     protected final const KEY_SIZE_WORD    = 8;    //  8 uint32 words = 32 bytes =  256 bits
-    protected final const KEY_SIZE_BYTE    = 32;   //  8 uint32 words = 32 bytes =  256 bits
+    public    final const KEY_SIZE_BYTE    = 32;   //  8 uint32 words = 32 bytes =  256 bits
     protected final const CHUNK_SIZE_BYTE  = 1024; //                 1024 bytes = 8192 bits = 16 blocks [MAX SIZE]
     protected final const BLOCK_SIZE_BYTE  = 64;   // 16 uint32 words = 64 bytes =  512 bits
     protected final const CHAIN_SIZE_BYTE  = 32;   //  8 uint32 words = 32 bytes =  256 bits
     protected final const CHAIN_SIZE_WORD  = 8;    //  8 uint32 words = 32 bytes =  256 bits
     protected final const OUTPUT_SIZE_WORD = 16;   // 16 uint32 words = 64 bytes =  512 bits
-    protected final const DIGEST_SIZE_BYTE = 32;   //  8 uint32 words = 32 bytes =  256 bits
+    public    final const DIGEST_SIZE_BYTE = 32;   //  8 uint32 words = 32 bytes =  256 bits
 
     /**
      * @param int $count Number of words to pack, 0 => auto

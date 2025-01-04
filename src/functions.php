@@ -1,5 +1,7 @@
 <?php
 
+// run `composer dump-autoload`
+
 declare(strict_types=1);
 
 namespace Tibarj\Blake3Noopt;
@@ -10,7 +12,7 @@ const INT32_MAX = 4294967296; // 2^32
 const INT64_BIT_SIZE = 64;
 const INT64_BYTE_SIZE = 8;
 
-if(!function_exists('rrotate') ) {
+if(!function_exists(__NAMESPACE__ . '\rrotate') ) {
     /**
      * Right rotation of $value by $n bit
      * This is an unsafe function that does not handle the cases
@@ -26,7 +28,7 @@ if(!function_exists('rrotate') ) {
     }
 }
 
-if(!function_exists('dd') ) {
+if(!function_exists(__NAMESPACE__ . '\dd') ) {
     function dd(...$args) {
         if (count($args)) {
             var_dump(...$args);
@@ -35,7 +37,7 @@ if(!function_exists('dd') ) {
     }
 }
 
-if(!function_exists('dump') ) {
+if(!function_exists(__NAMESPACE__ . '\dump') ) {
     function dump(...$args) {
         var_dump(...$args);
 
@@ -43,7 +45,7 @@ if(!function_exists('dump') ) {
     }
 }
 
-if(!function_exists('p') ) {
+if(!function_exists(__NAMESPACE__ . '\p') ) {
     function p(...$args) {
         if ($_ENV['BLAKE3_NOOPT_DEBUG'] ?? false) {
             fwrite(STDOUT, count($args) > 1 ? json_encode($args) : $args[0]);

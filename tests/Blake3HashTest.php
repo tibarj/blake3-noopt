@@ -1,6 +1,6 @@
 <?php
 
-// phpunit --testdox tests
+// phpunit --testdox tests --filter Blake3Hash
 
 declare(strict_types=1);
 
@@ -8,6 +8,7 @@ namespace Tibarj\Blake3Noopt\tests;
 
 use PHPUnit\Framework\TestCase;
 use Tibarj\Blake3Noopt\Blake3Hash;
+use Tibarj\Blake3Noopt\Strategy;
 
 final class Blake3HashTest extends TestCase
 {
@@ -15,6 +16,7 @@ final class Blake3HashTest extends TestCase
     {
         return [
             [
+                // #0
                 [''],
                 [
                     // 32 bytes
@@ -22,6 +24,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #1
             [
                 [''],
                 [
@@ -30,6 +33,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #2
             [
                 [''],
                 [ // 256 bytes in a go
@@ -37,6 +41,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #3
             [
                 [''],
                 [ // 1200 bytes in a go
@@ -67,6 +72,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #4
             [
                 [''],
                 [ // 1200 bytes in packets of 50 bytes
@@ -97,6 +103,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #5
             [
                 // 1 byte input
                 ['a'],
@@ -106,6 +113,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #6
             [
                 // 32 bytes input
                 ['aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'],
@@ -115,6 +123,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #7
             [
                 // 64 bytes input
                 ['aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'],
@@ -124,6 +133,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #8
             [
                 // 64 bytes input (1 block)
                 ['aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'],
@@ -133,6 +143,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #9
             [
                 // 65 bytes input (2 blocks)
                 ['aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'],
@@ -142,6 +153,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #10
             [
                 // 64 bytes input (1 block)
                 ['a9BO2Hkqd3axehDsgpMUjw06rbrzpt98gjjmsNW15HeqHii2KaYzTvvxcl8LZ8pL'],
@@ -151,6 +163,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #11
             [
                 [
                     // 1024 bytes input (1 chunk)
@@ -177,6 +190,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #12
             [
                 [
                     // 1024+1 bytes input (2 chunks)
@@ -204,6 +218,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #13
             [
                 [
                     // 1024+1 bytes input (2 chunks)
@@ -231,6 +246,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #14
             [
                 [
                     // 2*1024+1 bytes input (3 chunks)
@@ -275,6 +291,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #15
             [
                 [
                     // 4*1024+1 bytes input (5 chunks)
@@ -357,6 +374,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 null, // no key
             ],
+            // #16
             [
                 [
                     // keyed 1 byte input (1 chunk)
@@ -368,6 +386,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 'IvFOguXgaMxYU35R82zsyRPhS1qMMOAH', // 32 bytes key
             ],
+            // #17
             [
                 [
                     // keyed 1 byte input (1 chunk)
@@ -379,6 +398,7 @@ final class Blake3HashTest extends TestCase
                 ],
                 'IvFOguXgaMxYU35R82zsyRPhS1qMMOAH', // 32 bytes key
             ],
+            // #18
             [
                 [
                     // keyed 1024+1 bytes input (2 chunks)
@@ -414,7 +434,7 @@ final class Blake3HashTest extends TestCase
      */
     function test(array $input, array $expected, ?string $key)
     {
-        $blake3 = new Blake3Hash($key);
+        $blake3 = new Blake3Hash($key, $key ? Strategy::KEYED_HASH : Strategy::HASH);
         foreach ($input as $packet) {
             $blake3->absorb($packet);
         }
