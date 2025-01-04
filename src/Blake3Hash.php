@@ -169,7 +169,7 @@ class Blake3Hash extends AbstractBlake3
             $vv = static::compress($block, $v);
             $it++;
             if ($isLastBlock) {
-                p("Fill cargo output of node $node");
+                p("Return output of node $node");
                 return $vv;
             }
             $h = array_slice($vv, 0, self::CHAIN_SIZE_WORD);

@@ -246,6 +246,6 @@ v:
 00000000 00000000 0000003D 0000000A
 
 Tibarj\Blake3Noopt\AbstractBlake3::unpack
-Fill cargo output of node #0 of weight 1
+Return output of node #0 of weight 1
 Tibarj\Blake3Noopt\AbstractBlake3::pack
 ```
