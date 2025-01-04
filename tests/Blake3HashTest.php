@@ -434,7 +434,7 @@ final class Blake3HashTest extends TestCase
      */
     function test(array $input, array $expected, ?string $key)
     {
-        $blake3 = new Blake3Hash($key, $key ? Strategy::KEYED_HASH : Strategy::HASH);
+        $blake3 = new Blake3Hash($key);
         foreach ($input as $packet) {
             $blake3->absorb($packet);
         }

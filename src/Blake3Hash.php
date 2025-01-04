@@ -30,19 +30,15 @@ class Blake3Hash extends AbstractBlake3
         Strategy $strategy = Strategy::HASH,
     ) {
         if (null !== $key) {
-            if (
-                $strategy == Strategy::HASH ||
-                $strategy == Strategy::DERIVE_KEY_CONTEXT
-            ) {
+            if ($strategy == Strategy::DERIVE_KEY_CONTEXT) {
                 throw new InvalidArgumentException('$key and $strategy are incompatible');
             }
             $this->k = self::unpack($key, self::KEY_SIZE_WORD);
-            $this->flag = Strategy::KEYED_HASH == $strategy
+            $this->flag = Strategy::HASH == $strategy
                 ? self::FLAG_KEYED_HASH
                 : self::FLAG_DERIVE_KEY_MATERIAL;
         } else {
             if (
-                $strategy == Strategy::KEYED_HASH ||
                 $strategy == Strategy::DERIVE_KEY_MATERIAL
             ) {
                 throw new InvalidArgumentException('$key and $strategy are incompatible');
