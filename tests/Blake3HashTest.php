@@ -8,7 +8,6 @@ namespace Tibarj\Blake3Noopt\tests;
 
 use PHPUnit\Framework\TestCase;
 use Tibarj\Blake3Noopt\Blake3Hash;
-use Tibarj\Blake3Noopt\Strategy;
 
 final class Blake3HashTest extends TestCase
 {

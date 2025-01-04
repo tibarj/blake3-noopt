@@ -100,7 +100,7 @@ abstract class AbstractBlake3
         self::quarterRound($m[ 4], $m[ 5], $v[2], $v[6], $v[10], $v[14]);
         self::quarterRound($m[ 6], $m[ 7], $v[3], $v[7], $v[11], $v[15]);
 
-        //                                   rot0   rot1   rot2    rot3
+        //                                  rot0   rot1    rot2    rot3
         self::quarterRound($m[ 8], $m[ 9], $v[0], $v[5], $v[10], $v[15]);
         self::quarterRound($m[10], $m[11], $v[1], $v[6], $v[11], $v[12]);
         self::quarterRound($m[12], $m[13], $v[2], $v[7], $v[ 8], $v[13]);
