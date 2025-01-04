@@ -71,7 +71,7 @@ class Blake3Hash extends AbstractBlake3
             }
             $remaining = $this->cargo->getRemainingCapacity();
             $delta = min($remaining, strlen($input));
-            p("loading cargo with $delta bytes");
+            p("Loading cargo with $delta bytes");
             $packet = substr($input, 0, $delta);
             $input = substr($input, $delta);
             $this->cargo->ingest($packet);
@@ -161,7 +161,7 @@ class Blake3Hash extends AbstractBlake3
                     $v[15] |= self::FLAG_ROOT;
                 }
                 if ($b < self::BLOCK_SIZE_BYTE) {
-                    p('pad message with ' . (self::BLOCK_SIZE_BYTE - $b) . ' bytes');
+                    p('Pad message with ' . (self::BLOCK_SIZE_BYTE - $b) . ' bytes');
                     $block = str_pad($block, self::BLOCK_SIZE_BYTE, chr(0));
                 }
             }
@@ -169,7 +169,7 @@ class Blake3Hash extends AbstractBlake3
             $vv = static::compress($block, $v);
             $it++;
             if ($isLastBlock) {
-                p("fill cargo output of node $node");
+                p("Fill cargo output of node $node");
                 return $vv;
             }
             $h = array_slice($vv, 0, self::CHAIN_SIZE_WORD);
@@ -201,11 +201,11 @@ class Blake3Hash extends AbstractBlake3
         $result = null;
         $trash = [];
         foreach ($this->root->traverse() as $node) {
-            p('traversing ' . $node);
+            p("Traversing tree: $node");
             if ($node->parent && $node->parent->isEven() || $force) {
                 $output = $this->processNode($node);
                 if ($node->parent) {
-                    p("fill cargo input of node {$node->parent} from output of node $node");
+                    p("Fill cargo input of node {$node->parent} from output of node $node");
                     self::getNodeCargo($node->parent)->ingest(
                         static::pack(
                             array_slice($output, 0, self::CHAIN_SIZE_WORD),

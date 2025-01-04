@@ -94,7 +94,7 @@ Generated trace:
 Tibarj\Blake3Noopt\Blake3Hash::absorb 445 bytes
 445 bytes remaining
 Tibarj\Blake3Noopt\NodeCargo::__construct with capacity of 1024 and t=0
-loading cargo with 445 bytes
+Loading cargo with 445 bytes
 Tibarj\Blake3Noopt\NodeCargo::ingest 445 bytes at cargo offset 0
 payload:
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -103,7 +103,7 @@ Tibarj\Blake3Noopt\Blake3Hash::squeeze
 Tibarj\Blake3Noopt\Blake3Hash::shipCargo
 Tibarj\Blake3Noopt\BinaryNode::__construct #0 of weight 1
 Tibarj\Blake3Noopt\Blake3Hash::processTree
-traversing #0 of weight 1
+Traversing tree: #0 of weight 1
 Tibarj\Blake3Noopt\Blake3Hash::processNode #0 of weight 1
 Compress Node #0 of weight 1, Block 0
 
@@ -225,7 +225,7 @@ C32822E3 C43D9120 8EF755AD 385ED4C3
 00000000 00000000 00000040 00000000
 
 Tibarj\Blake3Noopt\AbstractBlake3::unpack
-pad message with 3 bytes
+Pad message with 3 bytes
 Compress Node #0 of weight 1, Block 6
 
 t0: 0
@@ -246,6 +246,6 @@ v:
 00000000 00000000 0000003D 0000000A
 
 Tibarj\Blake3Noopt\AbstractBlake3::unpack
-fill cargo output of node #0 of weight 1
+Fill cargo output of node #0 of weight 1
 Tibarj\Blake3Noopt\AbstractBlake3::pack
 ```
