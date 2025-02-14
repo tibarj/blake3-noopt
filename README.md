@@ -101,11 +101,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 Tibarj\Blake3Noopt\Blake3Hash::squeeze
 Tibarj\Blake3Noopt\Blake3Hash::shipCargo
-Tibarj\Blake3Noopt\BinaryNode::__construct #0 of weight 1
+Tibarj\Blake3Noopt\BinaryNode::__construct Node #0 of weight 1 as leaf
 Tibarj\Blake3Noopt\Blake3Hash::processTree
-Traversing tree: #0 of weight 1
-Tibarj\Blake3Noopt\Blake3Hash::processNode #0 of weight 1
-Compress Node #0 of weight 1, Block 0
+Tibarj\Blake3Noopt\BinaryNode::traverse from Node #0 of weight 1
+Yield Node #0 of weight 1
+Tibarj\Blake3Noopt\Blake3Hash::processNode Node #0 of weight 1
+
+Compress Node #0 of weight 1, Block #0
 
 t0: 0
 t1: 0
@@ -125,7 +127,8 @@ v:
 00000000 00000000 00000040 00000001
 
 Tibarj\Blake3Noopt\AbstractBlake3::unpack
-Compress Node #0 of weight 1, Block 1
+
+Compress Node #0 of weight 1, Block #1
 
 t0: 0
 t1: 0
@@ -145,7 +148,8 @@ A9AD0906 3E92FBE2 CF5A5C1E 83E45EEB
 00000000 00000000 00000040 00000000
 
 Tibarj\Blake3Noopt\AbstractBlake3::unpack
-Compress Node #0 of weight 1, Block 2
+
+Compress Node #0 of weight 1, Block #2
 
 t0: 0
 t1: 0
@@ -165,7 +169,8 @@ v:
 00000000 00000000 00000040 00000000
 
 Tibarj\Blake3Noopt\AbstractBlake3::unpack
-Compress Node #0 of weight 1, Block 3
+
+Compress Node #0 of weight 1, Block #3
 
 t0: 0
 t1: 0
@@ -185,7 +190,8 @@ F814446C 17F3992F 2A84DBFA 33499376
 00000000 00000000 00000040 00000000
 
 Tibarj\Blake3Noopt\AbstractBlake3::unpack
-Compress Node #0 of weight 1, Block 4
+
+Compress Node #0 of weight 1, Block #4
 
 t0: 0
 t1: 0
@@ -205,7 +211,8 @@ v:
 00000000 00000000 00000040 00000000
 
 Tibarj\Blake3Noopt\AbstractBlake3::unpack
-Compress Node #0 of weight 1, Block 5
+
+Compress Node #0 of weight 1, Block #5
 
 t0: 0
 t1: 0
@@ -226,7 +233,8 @@ C32822E3 C43D9120 8EF755AD 385ED4C3
 
 Tibarj\Blake3Noopt\AbstractBlake3::unpack
 Pad message with 3 bytes
-Compress Node #0 of weight 1, Block 6
+
+Compress Node #0 of weight 1, Block #6
 
 t0: 0
 t1: 0
@@ -246,6 +254,6 @@ v:
 00000000 00000000 0000003D 0000000A
 
 Tibarj\Blake3Noopt\AbstractBlake3::unpack
-Return output of node #0 of weight 1
+Return output of Node #0 of weight 1
 Tibarj\Blake3Noopt\AbstractBlake3::pack
 ```

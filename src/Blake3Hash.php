@@ -1,5 +1,9 @@
 <?php
 
+// phpunit --testdox tests --filter Blake3Hash
+// or
+// BLAKE3_NOOPT_DEBUG=1 phpunit --testdox tests --filter Blake3Hash
+
 declare(strict_types=1);
 
 namespace Tibarj\Blake3Noopt;
@@ -165,11 +169,11 @@ class Blake3Hash extends AbstractBlake3
                     $block = str_pad($block, self::BLOCK_SIZE_BYTE, chr(0));
                 }
             }
-            p("Compress Node $node, Block $it" . PHP_EOL);
+            p(PHP_EOL . "Compress $node, Block #$it" . PHP_EOL);
             $vv = static::compress($block, $v);
             $it++;
             if ($isLastBlock) {
-                p("Return output of node $node");
+                p("Return output of $node");
                 return $vv;
             }
             $h = array_slice($vv, 0, self::CHAIN_SIZE_WORD);
@@ -201,11 +205,10 @@ class Blake3Hash extends AbstractBlake3
         $result = null;
         $trash = [];
         foreach ($this->root->traverse() as $node) {
-            p("Traversing tree: $node");
-            if ($node->parent && $node->parent->isEven() || $force) {
+            if ($node->parent && $node->parent->isBalanced() || $force) {
                 $output = $this->processNode($node);
                 if ($node->parent) {
-                    p("Fill cargo input of node {$node->parent} from output of node $node");
+                    p("Fill cargo input of $node->parent from output of $node");
                     self::getNodeCargo($node->parent)->ingest(
                         static::pack(
                             array_slice($output, 0, self::CHAIN_SIZE_WORD),

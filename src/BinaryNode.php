@@ -1,7 +1,5 @@
 <?php
 
-// phpunit --testdox tests --filter Blake3Hash
-
 declare(strict_types=1);
 
 namespace Tibarj\Blake3Noopt;
@@ -30,14 +28,14 @@ class BinaryNode
         if ($l) {
             $l->parent = $this;
             $r->parent = $this;
-            $this->weight = $l->weight + $r->weight + 1;
+            $this->updateWeight();
         }
-        p(__METHOD__ . ' ' . $this);
+        p(__METHOD__ . " $this " . ($l ? "above $l and $r" : 'as leaf'));
     }
 
     public function __toString(): string
     {
-        return "#{$this->index} of weight {$this->weight}";
+        return "Node #{$this->index} of weight {$this->weight}";
     }
 
     public function destroy(): void
@@ -60,9 +58,9 @@ class BinaryNode
 
         $rightest = $this->getRightest();
 
-        // climb the tree unlite the node has an odd balance
+        // climb the tree unless the node is out of balance
         $sub = $rightest;
-        while ($sub->parent && $sub->parent->isEven()) {
+        while ($sub->parent && $sub->parent->isBalanced()) {
             $sub = $sub->parent;
         }
         $super = $sub->parent;
@@ -72,11 +70,19 @@ class BinaryNode
         $guest = new BinaryNode($index++, l: $sub, r: $leaf);
         if ($super) {
             // rewire the parent with the target parent
-            $super->r = $guest;
-            $guest->parent = $super;
+            $super->hang($guest);
         }
 
         return $guest->getRoot();
+    }
+
+    public function hang(BinaryNode $child): void
+    {
+        p(__METHOD__ . " $child under $this");
+
+        $this->r = $child;
+        $child->parent = $this;
+        $this->updateWeight();
     }
 
     /**
@@ -84,6 +90,8 @@ class BinaryNode
      */
     public function traverse(): Generator
     {
+        p(__METHOD__ . " from $this");
+
         $node = $this;
         $route = [];
         while ($node) {
@@ -96,6 +104,7 @@ class BinaryNode
                 $node = $node->r;
                 continue;
             }
+            p("Yield $node");
             yield $node; // yielding only when moving up
             $node = $node->parent;
         }
@@ -126,7 +135,7 @@ class BinaryNode
         return $root;
     }
 
-    public function isEven(): bool
+    public function isBalanced(): bool
     {
         return $this->l
             ? $this->l->weight == $this->r->weight
@@ -144,5 +153,10 @@ class BinaryNode
         }
 
         return $node;
+    }
+
+    private function updateWeight(): void
+    {
+        $this->weight = $this->l->weight + $this->r->weight + 1;
     }
 }

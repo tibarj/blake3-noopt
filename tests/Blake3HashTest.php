@@ -425,16 +425,59 @@ final class Blake3HashTest extends TestCase
                 ],
                 'IvFOguXgaMxYU35R82zsyRPhS1qMMOAH', // 32 bytes key
             ],
+            // 19
+            [
+                [
+                    'file://tests/data/1024.txt'
+                ],
+                [
+                    '94e3e081bd9cdb7f1b92914a2bb46a55832370e6a1986e66a74769d17e7cf871',
+                ],
+                null
+            ],
+            // 20
+            [
+                [
+                    'file://tests/data/2048.txt'
+                ],
+                [
+                    '77b23625bae96d78df107f255c89f840af11b2a6ff9823f17ddae14058de741f',
+                ],
+                null
+            ],
+            // 21
+            [
+                [
+                    'file://tests/data/4096.txt'
+                ],
+                [
+                    '8429a95872133ea8c0cf8c6165dd29a594132bf8ec3e47a33eb92318e7b80c5d',
+                ],
+                null
+            ],
+            // 22
+            [
+                [
+                    'file://tests/data/8192.txt'
+                ],
+                [
+                    'f97b05373e3e97561ec009fe6c99298b5a13690ebf41ce975b7d83959d877913',
+                ],
+                null
+            ],
         ];
     }
 
     /**
      * @dataProvider data
      */
-    function test(array $input, array $expected, ?string $key)
+    public function test(array $input, array $expected, ?string $key): void
     {
         $blake3 = new Blake3Hash($key);
         foreach ($input as $packet) {
+            if (str_starts_with($packet, 'file://')) {
+                $packet = file_get_contents(substr($packet, strlen('file://')));
+            }
             $blake3->absorb($packet);
         }
 
