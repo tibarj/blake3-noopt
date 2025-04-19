@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-site-verification" content="1vhhHxfAdkryomOhU_qN2qwnFSfzETp2sKwbigRc3Nc" />
+    <meta name="keywords" content="hashing, php, cryptography, hash, instructional, blake3, php-implementation">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Blake3 | blake3noopt</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Blake3" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Blake3 php 8.3 implementation, for instructional purposes only" />
+<meta property="og:description" content="Blake3 php 8.3 implementation, for instructional purposes only" />
+<link rel="canonical" href="https://tibarj.github.io/blake3noopt/" />
+<meta property="og:url" content="https://tibarj.github.io/blake3noopt/" />
+<meta property="og:site_name" content="blake3noopt" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Blake3" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","description":"Blake3 php 8.3 implementation, for instructional purposes only","headline":"Blake3","name":"blake3noopt","url":"https://tibarj.github.io/blake3noopt/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/blake3noopt/assets/css/style.css?v=376f61b976bbb927dc74d94299005944ea741784">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/blake3noopt/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+
+      <h1><a href="https://tibarj.github.io/blake3noopt/">blake3noopt</a></h1>
+
+
+      <h1 id="blake3">Blake3</h1>
+
+<p>Blake3 php 8.3 implementation, for instructional purposes only</p>
+
+<p>Reference: https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf</p>
+
+<h2 id="basic-usage">Basic Usage</h2>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">Tibarj\Blake3Noopt\Blake3Hash</span><span class="p">;</span>
+
+<span class="nv">$hash</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nc">Blake3Hash</span><span class="p">())</span>
+    <span class="o">-&gt;</span><span class="nf">absorb</span><span class="p">(</span><span class="nv">$input</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">squeeze</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h2 id="advanced-usage">Advanced Usage</h2>
+
+<h3 id="hash--keyed-hash-modes">Hash / Keyed Hash Modes</h3>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">Tibarj\Blake3Noopt\Blake3Hash</span><span class="p">;</span>
+
+<span class="nv">$blake3</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Blake3Hash</span><span class="p">();</span>     <span class="c1">//       hash mode</span>
+<span class="nv">$blake3</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Blake3Hash</span><span class="p">(</span><span class="nv">$key</span><span class="p">);</span> <span class="c1">// keyed_hash mode</span>
+
+<span class="nv">$h</span> <span class="o">=</span> <span class="nb">fopen</span><span class="p">(</span><span class="s1">'hash_input'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">);</span>
+<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nb">feof</span><span class="p">(</span><span class="nv">$h</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nv">$blake3</span><span class="o">-&gt;</span><span class="nf">absorb</span><span class="p">(</span><span class="nb">fread</span><span class="p">(</span><span class="nv">$h</span><span class="p">,</span> <span class="mi">500</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="nb">fclose</span><span class="p">(</span><span class="nv">$h</span><span class="p">);</span>
+
+<span class="c1">// squeeze hash</span>
+<span class="nv">$hash</span> <span class="o">=</span> <span class="nv">$blake3</span><span class="o">-&gt;</span><span class="nf">squeeze</span><span class="p">();</span>
+
+<span class="c1">// extendable output</span>
+<span class="nv">$h</span> <span class="o">=</span> <span class="nb">fopen</span><span class="p">(</span><span class="s1">'hash_output'</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">);</span>
+<span class="k">while</span><span class="p">(</span><span class="mf">..</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">fwrite</span><span class="p">(</span><span class="nv">$h</span><span class="p">,</span> <span class="nv">$blake3</span><span class="o">-&gt;</span><span class="nf">squeeze</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="nb">fclose</span><span class="p">(</span><span class="nv">$h</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="derive-key-mode">Derive Key Mode</h3>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">use</span> <span class="nc">Tibarj\Blake3Noopt\Blake3KD</span><span class="p">;</span>
+
+<span class="nv">$blake3</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Blake3KD</span><span class="p">();</span>
+
+<span class="c1">// absorb key context</span>
+<span class="nv">$h</span> <span class="o">=</span> <span class="nb">fopen</span><span class="p">(</span><span class="s1">'key_context'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">);</span>
+<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nb">feof</span><span class="p">(</span><span class="nv">$h</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nv">$blake3</span><span class="o">-&gt;</span><span class="nf">absorb</span><span class="p">(</span><span class="nb">fread</span><span class="p">(</span><span class="nv">$h</span><span class="p">,</span> <span class="mi">500</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="nb">fclose</span><span class="p">(</span><span class="nv">$h</span><span class="p">);</span>
+
+<span class="c1">// switch to key material absorption</span>
+<span class="nv">$blake3</span><span class="o">-&gt;</span><span class="nf">ratchet</span><span class="p">();</span>
+
+<span class="c1">// absorb key material</span>
+<span class="nv">$h</span> <span class="o">=</span> <span class="nb">fopen</span><span class="p">(</span><span class="s1">'key_material'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">);</span>
+<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nb">feof</span><span class="p">(</span><span class="nv">$h</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nv">$blake3</span><span class="o">-&gt;</span><span class="nf">absorb</span><span class="p">(</span><span class="nb">fread</span><span class="p">(</span><span class="nv">$h</span><span class="p">,</span> <span class="mi">500</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="nb">fclose</span><span class="p">(</span><span class="nv">$h</span><span class="p">);</span>
+
+<span class="c1">// hash</span>
+<span class="nv">$hash</span> <span class="o">=</span> <span class="nv">$blake3</span><span class="o">-&gt;</span><span class="nf">squeeze</span><span class="p">();</span>
+
+<span class="c1">// extendable output</span>
+<span class="nv">$h</span> <span class="o">=</span> <span class="nb">fopen</span><span class="p">(</span><span class="s1">'key_output'</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">);</span>
+<span class="k">while</span><span class="p">(</span><span class="mf">..</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">fwrite</span><span class="p">(</span><span class="nv">$h</span><span class="p">,</span> <span class="nv">$blake3</span><span class="o">-&gt;</span><span class="nf">squeeze</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="nb">fclose</span><span class="p">(</span><span class="nv">$h</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="traces">Traces</h2>
+
+<p>Use environment variable <code class="language-plaintext highlighter-rouge">BLAKE3_NOOPT_DEBUG</code> to activate traces.</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$hash</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nc">Blake3Hash</span><span class="p">())</span>
+    <span class="o">-&gt;</span><span class="nf">absorb</span><span class="p">(</span><span class="s1">'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="nf">squeeze</span><span class="p">();</span>
+
+<span class="k">echo</span> <span class="nb">bin2hex</span><span class="p">(</span><span class="nv">$hash</span><span class="p">);</span> <span class="c1">// 71fe44583a6268b56139599c293aeb854e5c5a9908eca00105d81ad5e22b7bb6</span>
+</code></pre></div></div>
+
+<p>Generated trace:</p>
+
+<pre><code class="language-txt">Tibarj\Blake3Noopt\Blake3Hash::absorb 445 bytes
+445 bytes remaining
+Tibarj\Blake3Noopt\NodeCargo::__construct with capacity of 1024 and t=0
+Loading cargo with 445 bytes
+Tibarj\Blake3Noopt\NodeCargo::ingest 445 bytes at cargo offset 0
+payload:
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+Tibarj\Blake3Noopt\Blake3Hash::squeeze
+Tibarj\Blake3Noopt\Blake3Hash::shipCargo
+Tibarj\Blake3Noopt\BinaryNode::__construct Node #0 of weight 1 as leaf
+Tibarj\Blake3Noopt\Blake3Hash::processTree
+Tibarj\Blake3Noopt\BinaryNode::traverse from Node #0 of weight 1
+Yield Node #0 of weight 1
+Tibarj\Blake3Noopt\Blake3Hash::processNode Node #0 of weight 1
+
+Compress Node #0 of weight 1, Block #0
+
+t0: 0
+t1: 0
+b: 64
+flags: CHUNK_START
+
+m:
+4C6F7265 6D206970 73756D20 646F6C6F
+72207369 7420616D 65742C20 636F6E73
+65637465 74757220 61646970 69736369
+6E672065 6C69742C 20736564 20646F20
+
+v:
+6A09E667 BB67AE85 3C6EF372 A54FF53A
+510E527F 9B05688C 1F83D9AB 5BE0CD19
+6A09E667 BB67AE85 3C6EF372 A54FF53A
+00000000 00000000 00000040 00000001
+
+Tibarj\Blake3Noopt\AbstractBlake3::unpack
+
+Compress Node #0 of weight 1, Block #1
+
+t0: 0
+t1: 0
+b: 64
+flags:
+
+m:
+65697573 6D6F6420 74656D70 6F722069
+6E636964 6964756E 74207574 206C6162
+6F726520 65742064 6F6C6F72 65206D61
+676E6120 616C6971 75612E20 55742065
+
+v:
+ED3E6F84 FA8DE6A0 05EDF2E8 089C9A94
+A9AD0906 3E92FBE2 CF5A5C1E 83E45EEB
+6A09E667 BB67AE85 3C6EF372 A54FF53A
+00000000 00000000 00000040 00000000
+
+Tibarj\Blake3Noopt\AbstractBlake3::unpack
+
+Compress Node #0 of weight 1, Block #2
+
+t0: 0
+t1: 0
+b: 64
+flags:
+
+m:
+6E696D20 6164206D 696E696D 2076656E
+69616D2C 20717569 73206E6F 73747275
+64206578 65726369 74617469 6F6E2075
+6C6C616D 636F206C 61626F72 6973206E
+
+v:
+5DC06F93 9861FFE1 7D3AE29C B3350400
+46BB352D CD9159C6 BC628A87 92E5A05A
+6A09E667 BB67AE85 3C6EF372 A54FF53A
+00000000 00000000 00000040 00000000
+
+Tibarj\Blake3Noopt\AbstractBlake3::unpack
+
+Compress Node #0 of weight 1, Block #3
+
+t0: 0
+t1: 0
+b: 64
+flags:
+
+m:
+69736920 75742061 6C697175 69702065
+78206561 20636F6D 6D6F646F 20636F6E
+73657175 61742E20 44756973 20617574
+65206972 75726520 646F6C6F 7220696E
+
+v:
+2B1F2AF6 7181525D 30BEF2B5 3AC8C257
+F814446C 17F3992F 2A84DBFA 33499376
+6A09E667 BB67AE85 3C6EF372 A54FF53A
+00000000 00000000 00000040 00000000
+
+Tibarj\Blake3Noopt\AbstractBlake3::unpack
+
+Compress Node #0 of weight 1, Block #4
+
+t0: 0
+t1: 0
+b: 64
+flags:
+
+m:
+20726570 72656865 6E646572 69742069
+6E20766F 6C757074 61746520 76656C69
+74206573 73652063 696C6C75 6D20646F
+6C6F7265 20657520 66756769 6174206E
+
+v:
+72351432 F0EFC435 BA64B546 A9EED213
+4DC2B517 DEE37AE5 3F0A101A CA437B25
+6A09E667 BB67AE85 3C6EF372 A54FF53A
+00000000 00000000 00000040 00000000
+
+Tibarj\Blake3Noopt\AbstractBlake3::unpack
+
+Compress Node #0 of weight 1, Block #5
+
+t0: 0
+t1: 0
+b: 64
+flags:
+
+m:
+756C6C61 20706172 69617475 722E2045
+78636570 74657572 2073696E 74206F63
+63616563 61742063 75706964 61746174
+206E6F6E 2070726F 6964656E 742C2073
+
+v:
+CF778D2A EE7915B3 F5E13CE3 EB8E0137
+C32822E3 C43D9120 8EF755AD 385ED4C3
+6A09E667 BB67AE85 3C6EF372 A54FF53A
+00000000 00000000 00000040 00000000
+
+Tibarj\Blake3Noopt\AbstractBlake3::unpack
+Pad message with 3 bytes
+
+Compress Node #0 of weight 1, Block #6
+
+t0: 0
+t1: 0
+b: 61
+flags: CHUNK_END ROOT
+
+m:
+756E7420 696E2063 756C7061 20717569
+206F6666 69636961 20646573 6572756E
+74206D6F 6C6C6974 20616E69 6D206964
+20657374 206C6162 6F72756D 2E000000
+
+v:
+91EB7886 180310E0 5A164DC8 0755C285
+64FFFC05 2A94DE5D AF0D40FD 0A0997BF
+6A09E667 BB67AE85 3C6EF372 A54FF53A
+00000000 00000000 0000003D 0000000A
+
+Tibarj\Blake3Noopt\AbstractBlake3::unpack
+Return output of Node #0 of weight 1
+Tibarj\Blake3Noopt\AbstractBlake3::pack
+</code></pre>
+
+
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/tibarj/blake3noopt/edit/main/README.md">Improve this page</a>.
+      </div>
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>
